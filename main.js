@@ -86,14 +86,16 @@ ngCompile.prototype.$compile = function (html) {
     if (typeof html === "object") html = (html.length ? html[0].outerHTML : html.outerHTML);
     var $scope = this.$new(), _self = this;
     return function (context) {
-        _self.angular.extend($scope, context);
-        var elem = _self.services.$compile(html)($scope);
-        elem = _self.angular.element('<div/>').append(elem);
-        $scope.$apply();
-        var str = elem[0].innerHTML;
-        $scope.$destroy();
-        elem = $scope = null;
-        return str;
+		_self.angular.extend($scope, context);
+		var elem = _self.services.$compile(html)($scope);
+		var elemAppended = _self.angular.element('<div/>').append(elem);
+		$scope.$apply();
+		var str = elemAppended[0].innerHTML;
+		$scope.$destroy();
+		elemAppended.remove();
+		elem.remove();
+		elem = elemAppended = $scope = null;
+		return str;
     }
 }
 
